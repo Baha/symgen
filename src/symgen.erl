@@ -3,4 +3,9 @@
 
 main(File) ->
   Forms = forms:read(File ++ ".erl"),
-  io:format("~p~n", [Forms]).
+  FiltForms = forms:filter(fun is_prop_fun/1, Forms),
+  io:format("~p~n", [FiltForms]).
+
+% TODO: Fix predicate for filtering proper calls
+is_prop_fun({function,_,_,0,_}) -> true;
+is_prop_fun(_) -> false.
