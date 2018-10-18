@@ -6,7 +6,6 @@ main(File) ->
   PropFuns = forms:filter(fun is_prop_fun/1, Forms),
   [generate_clauses(Fun) || Fun <- PropFuns].
 
-
 is_prop_fun({function,_,_,0,FunClauses}) ->
   FirstClause = hd(FunClauses),
   Body = erl_syntax:clause_body(FirstClause),
@@ -25,7 +24,8 @@ generate_clauses(Fun) ->
   Vars = get_vars(Prop),
   io:format("VARS:  ~s~n", [forms:from_abstract(Vars)]),
   io:format("TYPES: ~s~n", [forms:from_abstract(Types)]),
-  io:format("PROP:  ~s~n", [forms:from_abstract(Prop)]).
+  io:format("PROP:  ~s~n", [forms:from_abstract(Prop)]),
+  io:format("~n").
 
 get_vars({'fun',_,{clauses,Clauses}}) ->
   FirstClause = hd(Clauses),
