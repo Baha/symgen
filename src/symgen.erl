@@ -34,10 +34,15 @@ generate_clauses(Fun) ->
     {proper_types, bind} ->
       io:format("LET (user-defined type)~n")
   end,
-  io:format("Vars:  ~s~n", [forms:from_abstract(Vars)]),
-  io:format("Types: ~s~n", [forms:from_abstract(Types)]),
-  % io:format("PROP:  ~s~n", [forms:from_abstract(Prop)]),
-  io:format("~n").
+
+  ZipVT = zip_vars_types(Vars, Types),
+
+  io:format("~n"),
+  io:format("Vars:  ~p~n", [Vars]),
+  io:format("Types: ~p~n", [Types]),
+  io:format("~s", [generate_head(ZipVT)]),
+  io:format("~s", [generate_body(ZipVT)]),
+  io:format("~n~n").
 
 get_vars({'fun',_,{clauses,Clauses}}) ->
   FirstClause = hd(Clauses),
