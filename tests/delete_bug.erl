@@ -73,7 +73,7 @@ list_and_elem1() ->
 	      lists:member(X,L)).
 
 prop_delete_only_interesting2() ->
-    ?FORALL({X,L}, list_and_elem1(),
+    ?FORALL([X,L], list_and_elem1(),
 	    not lists:member(X, delete(X,L))).
 
 list_and_elem2() ->
