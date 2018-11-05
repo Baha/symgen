@@ -49,4 +49,30 @@ get_vars({'fun',_,{clauses,Clauses}}) ->
   {clause,_,Vars,_,_} = FirstClause,
   Vars.
   
+generate_head([Vars]) ->
+  "gen(" ++ generate_head_1(Vars) ++ ") :- ".
 
+generate_head_1(ConsList = {cons,_,_,_}) ->
+  generate_head_1(forms:cons_to_list(ConsList));
+
+generate_head_1(VList) when is_list(VList) ->
+  VarList = [generate_head_1(V) || V <- VList],
+  "(" ++ string:join(VarList, ",") ++ ")";
+
+generate_head_1(TupleList = {tuple,_,TupleEs}) ->
+  VarList = [generate_head_1(V) || V <- TupleEs],
+  "(" ++ string:join(VarList, ",") ++ ")";
+
+generate_head_1(Var={var,_,_}) ->
+  forms:from_abstract(Var).
+
+% generate_body(TupleList = {tuple,_,TupleEs}) ->
+%   TypeList = [generate_body(T) || T <- TypeList],
+%   "(" ++ string:join(TypeList, ",") ++ ")";
+
+% generate_body({call,_,CallName,Args}) ->
+%   generate_callname(CallName) ++ "()";
+% generate_body(_) -> "".
+
+% generate_callname({atom,_,CallName}) ->
+%   atom_to_list(CallName).
