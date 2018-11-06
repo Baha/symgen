@@ -65,14 +65,3 @@ generate_head_1(TupleList = {tuple,_,TupleEs}) ->
 
 generate_head_1(Var={var,_,_}) ->
   forms:from_abstract(Var).
-
-% generate_body(TupleList = {tuple,_,TupleEs}) ->
-%   TypeList = [generate_body(T) || T <- TypeList],
-%   "(" ++ string:join(TypeList, ",") ++ ")";
-
-% generate_body({call,_,CallName,Args}) ->
-%   generate_callname(CallName) ++ "()";
-% generate_body(_) -> "".
-
-% generate_callname({atom,_,CallName}) ->
-%   atom_to_list(CallName).
