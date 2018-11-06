@@ -50,7 +50,37 @@ get_vars({'fun',_,{clauses,Clauses}}) ->
   FirstClause = hd(Clauses),
   {clause,_,Vars,_,_} = FirstClause,
   Vars.
-  
+
+zip_vars_types([], []) -> [];
+zip_vars_types([{tuple,_,VList}|RVars], [{tuple,_,TList}|RTypes]) ->
+  zip_vars_types(VList,TList) ++ zip_vars_types(RVars,RTypes);
+zip_vars_types([V|RVars],[T|RTypes]) ->
+  [{V,T}] ++ zip_vars_types(RVars,RTypes).
+
+pp_vars_types(VarsTypes) ->
+  TypeofStr = [pp_vt(V,T) || {V,T} <- VarsTypes],
+  string:join(TypeofStr, ",").
+
+pp_vt({var,_,Var}, T={call,_,{atom,_,CName},Args}) ->
+  VarStr = atom_to_list(Var),
+  CallStr = atom_to_list(CName),
+  ArgsStr =
+    case length(Args) of
+      0 -> "";
+      _ -> "(" ++ pp_nested(Args) ++ ")"
+    end,
+  FullStr = "typeof(" ++ VarStr ++ "," ++ CallStr ++ ArgsStr ++ ")",
+  FullStr.
+
+pp_nested([{call,_,{atom,_,CName},Args}]) ->
+  CallStr = atom_to_list(CName),
+  ArgsStr =
+      case length(Args) of
+      0 -> "";
+      _ -> "(" ++ pp_nested(Args) ++ ")"
+    end,
+  CallStr ++ ArgsStr.
+
 generate_head([Vars]) ->
   "gen(" ++ generate_head_1(Vars) ++ ") :- ".
 
