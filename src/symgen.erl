@@ -34,14 +34,16 @@ generate_clauses(Fun) ->
     {proper_types, bind} ->
       io:format("LET (user-defined type)~n")
   end,
+  % [FVars] = Vars,
+  ZipVT = zip_vars_types(Vars, [Types]),
+  PpStr = pp_vars_types(ZipVT),
 
-  ZipVT = zip_vars_types(Vars, Types),
-
-  io:format("~n"),
-  io:format("Vars:  ~p~n", [Vars]),
-  io:format("Types: ~p~n", [Types]),
-  io:format("~s", [generate_head(ZipVT)]),
-  io:format("~s", [generate_body(ZipVT)]),
+  % io:format("~n"),
+  % io:format("Vars:  ~p~n", [Vars]),
+  % io:format("Types: ~p~n", [Types])
+  io:format("~s~n", [PpStr]),
+  % io:format("~s", [generate_head(ZipVT)]),
+  % io:format("~s", [generate_body(ZipVT)]),
   io:format("~n~n").
 
 get_vars({'fun',_,{clauses,Clauses}}) ->
