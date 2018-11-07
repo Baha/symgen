@@ -51,11 +51,20 @@ zip_vars_types([{tuple,_,VList}|RVars], [{tuple,_,TList}|RTypes]) ->
 zip_vars_types([V|RVars],[T|RTypes]) ->
   [{V,T}] ++ zip_vars_types(RVars,RTypes).
 
+pp_head(GenName, VarsTypes) ->
+  VarsStr = [pp_var(V) || {V,_} <- VarsTypes],
+  JointStr = string:join(VarsStr, ","),
+  HeadStr = "gen_" ++ GenName ++ "((" ++ JointStr ++ ")) :- ",
+  HeadStr.
+
+pp_var({var,_,Var}) ->
+  atom_to_list(Var).
+
 pp_vars_types(VarsTypes) ->
   TypeofStr = [pp_vt(V,T) || {V,T} <- VarsTypes],
   string:join(TypeofStr, ",").
 
-pp_vt({var,_,Var}, T={call,_,{atom,_,CName},Args}) ->
+pp_vt({var,_,Var}, {call,_,{atom,_,CName},Args}) ->
   VarStr = atom_to_list(Var),
   CallStr = atom_to_list(CName),
   ArgsStr =
