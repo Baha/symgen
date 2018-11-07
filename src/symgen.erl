@@ -25,14 +25,17 @@ generate_clauses(Fun) ->
   Prop  = lists:nth(2, CallArgs),
   Vars = get_vars(Prop),
   FunName = erl_syntax:function_name(Fun),
-  io:format("~s -- ", [forms:from_abstract(FunName)]),
+  GenName = forms:from_abstract(FunName),
   case {ProperMod, ProperCall} of
     {proper,forall} ->
-      io:format("FORALL (property)~n");
+      % io:format("FORALL (property)~n"),
+      ok;
     {proper_types, add_constraint} ->
-      io:format("SUCHTHAT (user-defined type)~n");
+      % io:format("SUCHTHAT (user-defined type)~n"),
+      ok;
     {proper_types, bind} ->
-      io:format("LET (user-defined type)~n")
+      % io:format("LET (user-defined type)~n"),
+      ok
   end,
   ZipVT = zip_vars_types(Vars, [Types]),
   HeadStr  = pp_head(GenName, ZipVT),
