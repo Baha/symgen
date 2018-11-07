@@ -34,17 +34,11 @@ generate_clauses(Fun) ->
     {proper_types, bind} ->
       io:format("LET (user-defined type)~n")
   end,
-  % [FVars] = Vars,
   ZipVT = zip_vars_types(Vars, [Types]),
-  PpStr = pp_vars_types(ZipVT),
-
-  % io:format("~n"),
-  % io:format("Vars:  ~p~n", [Vars]),
-  % io:format("Types: ~p~n", [Types])
-  io:format("~s~n", [PpStr]),
-  % io:format("~s", [generate_head(ZipVT)]),
-  % io:format("~s", [generate_body(ZipVT)]),
-  io:format("~n~n").
+  HeadStr  = pp_head(GenName, ZipVT),
+  TypesStr = pp_vars_types(ZipVT),
+  PpStr = HeadStr ++ TypesStr ++ ".",
+  io:format("~s~n~n", [PpStr]).
 
 get_vars({'fun',_,{clauses,Clauses}}) ->
   FirstClause = hd(Clauses),
@@ -81,19 +75,3 @@ pp_nested([{call,_,{atom,_,CName},Args}]) ->
     end,
   CallStr ++ ArgsStr.
 
-generate_head([Vars]) ->
-  "gen(" ++ generate_head_1(Vars) ++ ") :- ".
-
-generate_head_1(ConsList = {cons,_,_,_}) ->
-  generate_head_1(forms:cons_to_list(ConsList));
-
-generate_head_1(VList) when is_list(VList) ->
-  VarList = [generate_head_1(V) || V <- VList],
-  "(" ++ string:join(VarList, ",") ++ ")";
-
-generate_head_1(TupleList = {tuple,_,TupleEs}) ->
-  VarList = [generate_head_1(V) || V <- TupleEs],
-  "(" ++ string:join(VarList, ",") ++ ")";
-
-generate_head_1(Var={var,_,_}) ->
-  forms:from_abstract(Var).
