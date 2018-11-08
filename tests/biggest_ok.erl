@@ -13,7 +13,7 @@ biggest([Head|Tail], Biggest) when Head < Biggest ->
     biggest(Tail, Biggest).
 
 prop_biggest() ->
-    ?FORALL(List, non_empty(list(integer())),  
+    ?FORALL(List, non_empty(list(integer(2,5))),
         begin
             biggest(List) =:= lists:last(lists:sort(List))
         end).
