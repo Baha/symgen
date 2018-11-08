@@ -97,4 +97,7 @@ pp_nested([{call,_,{atom,_,CName},Args}]) ->
       0 -> "";
       _ -> "(" ++ pp_nested(Args) ++ ")"
     end,
-  CallStr ++ ArgsStr.
+  CallStr ++ ArgsStr;
+pp_nested(Args) ->
+  FromAbsArgs = [forms:from_abstract(A) || A <- Args],
+  string:join(FromAbsArgs, ",").
