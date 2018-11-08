@@ -60,6 +60,9 @@ pp_head(GenName, VarsTypes) ->
   HeadStr = "gen_" ++ GenName ++ "((" ++ JointStr ++ ")) :- ",
   HeadStr.
 
+pp_var({tuple,_,Vars}) ->
+  PpVars = [pp_var(V) || V <- Vars],
+  string:join(PpVars, ",");
 pp_var({var,_,Var}) ->
   atom_to_list(Var).
 
@@ -76,7 +79,13 @@ pp_vt({var,_,Var}, {call,_,{atom,_,CName},Args}) ->
       _ -> "(" ++ pp_nested(Args) ++ ")"
     end,
   FullStr = "typeof(" ++ VarStr ++ "," ++ CallStr ++ ArgsStr ++ ")",
-  FullStr.
+  FullStr;
+% Args will be empty in this case
+pp_vt(Vars,{call,_,{atom,_,CName},_Args}) ->
+  CallStr = atom_to_list(CName),
+  ArgsStr = "(" ++ pp_var(Vars) ++ ")",
+  GenStr = "gen_" ++ CallStr ++ "(" ++ ArgsStr ++ ")",
+  GenStr.
 
 pp_nested([{call,_,{atom,_,CName},Args}]) ->
   CallStr = atom_to_list(CName),
@@ -86,4 +95,3 @@ pp_nested([{call,_,{atom,_,CName},Args}]) ->
       _ -> "(" ++ pp_nested(Args) ++ ")"
     end,
   CallStr ++ ArgsStr.
-
