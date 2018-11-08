@@ -59,7 +59,10 @@ pp_head(GenName, VarsTypes) ->
   JointStr = string:join(VarsStr, ","),
   HeadStr = "gen_" ++ GenName ++ "((" ++ JointStr ++ ")) :- ",
   HeadStr.
-
+pp_var(ConsVars = {cons,_,_,_}) ->
+  ConsList = forms:cons_to_list(ConsVars),
+  PpVars = [pp_var(V) || V <- ConsList],
+  string:join(PpVars, ",");
 pp_var({tuple,_,Vars}) ->
   PpVars = [pp_var(V) || V <- Vars],
   string:join(PpVars, ",");
