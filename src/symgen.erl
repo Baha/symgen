@@ -111,3 +111,22 @@ pp_nested([{call,_,{atom,_,CName},Args}]) ->
 pp_nested(Args) ->
   FromAbsArgs = [forms:from_abstract(A) || A <- Args],
   string:join(FromAbsArgs, ",").
+
+pp_propfun({block,_,List}) ->
+  PpList = [pp_propfun(L) || L <- List],
+  "block(" ++ string:join(PpList, ",") ++ ")";
+pp_propfun({call,_,Call,Args}) ->
+  PpArgs = [pp_propfun(A) || A <- Args],
+  StrArgs = "[" ++ string:join(PpArgs, ",") ++ "]",
+  "call(" ++ pp_propfun(Call) ++ "," ++ StrArgs ++ ")";
+pp_propfun({op,_,Op,Arg}) ->
+  pp_propfun({call,0,{remote,0,{atom,0,erlang},{atom,0,Op}},[Arg]});
+pp_propfun({op,_,Op,Arg1,Arg2}) ->
+  pp_propfun({call,0,{remote,0,{atom,0,erlang},{atom,0,Op}},[Arg1,Arg2]});
+pp_propfun({atom,_,Atom}) ->
+  "lit(atom," ++ atom_to_list(Atom) ++ ")";
+pp_propfun({remote,_,Mod,Fun}) ->
+  pp_propfun(Mod) ++ "," ++ pp_propfun(Fun);
+pp_propfun({var,_,Var}) ->
+  "var(" ++ atom_to_list(Var) ++ ")";
+pp_propfun(_) -> "_".
