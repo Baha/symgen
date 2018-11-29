@@ -3,6 +3,7 @@
 
 main(File) ->
   Forms = forms:read(File ++ ".erl"),
+  io:format("~s~n-------------------------~n", [File]),
   PropFuns = forms:filter(fun is_prop_fun/1, Forms),
   [generate_clauses(Fun) || Fun <- PropFuns].
 
