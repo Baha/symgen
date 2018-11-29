@@ -25,6 +25,7 @@ generate_clauses(Fun) ->
   Types = lists:nth(1, CallArgs),
   Prop  = lists:nth(2, CallArgs),
   Vars = get_vars(Prop),
+  PropFun = get_propfun(Prop),
   FunName = erl_syntax:function_name(Fun),
   GenName = forms:from_abstract(FunName),
   case {ProperMod, ProperCall} of
@@ -41,13 +42,21 @@ generate_clauses(Fun) ->
   ZipVT = zip_vars_types(Vars, [Types]),
   HeadStr  = pp_head(GenName, ZipVT),
   TypesStr = pp_vars_types(ZipVT),
-  PpStr = HeadStr ++ TypesStr ++ ".",
-  io:format("~s~n~n", [PpStr]).
+  PropStr = "eval(" ++ pp_propfun(PropFun) ++ ")",
+  PpStr = HeadStr ++ TypesStr ++ "," ++ PropStr ++ ".",
+  % PpStr = HeadStr ++ TypesStr ++ ".",
+  io:format("~s~n~n", [PpStr]).%,
+  % io:format("~p~n", [PropFun]).
 
 get_vars({'fun',_,{clauses,Clauses}}) ->
   FirstClause = hd(Clauses),
   {clause,_,Vars,_,_} = FirstClause,
   Vars.
+
+get_propfun({'fun',_,{clauses,Clauses}}) ->
+  FirstClause = hd(Clauses),
+  [Body] = erl_syntax:clause_body(FirstClause),
+  Body.
 
 zip_vars_types([], []) -> [];
 zip_vars_types([{tuple,_,VList}|RVars], [{tuple,_,TList}|RTypes]) ->
