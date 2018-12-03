@@ -119,7 +119,12 @@ pp_propfun({block,_,List}) ->
 pp_propfun({call,_,Call,Args}) ->
   PpArgs = [pp_propfun(A) || A <- Args],
   StrArgs = "[" ++ string:join(PpArgs, ",") ++ "]",
-  "call(" ++ pp_propfun(Call) ++ "," ++ StrArgs ++ ")";
+  CallPred =
+    case Call of
+      {remote,_,_,_} -> "call";
+      _ -> "apply"
+    end,
+  CallPred ++ "(" ++ pp_propfun(Call) ++ "," ++ StrArgs ++ ")";
 pp_propfun({op,_,Op,Arg}) ->
   pp_propfun({call,0,{remote,0,{atom,0,erlang},{atom,0,Op}},[Arg]});
 pp_propfun({op,_,Op,Arg1,Arg2}) ->
