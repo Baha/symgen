@@ -114,7 +114,8 @@ pp_nested(Args) ->
 
 pp_propfun({block,_,List}) ->
   PpList = [pp_propfun(L) || L <- List],
-  "block(" ++ string:join(PpList, ",") ++ ")";
+  StrList = "[" ++ string:join(PpList, ",") ++ "]",
+  "block(" ++ StrList ++ ")";
 pp_propfun({call,_,Call,Args}) ->
   PpArgs = [pp_propfun(A) || A <- Args],
   StrArgs = "[" ++ string:join(PpArgs, ",") ++ "]",
