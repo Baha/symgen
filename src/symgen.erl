@@ -134,5 +134,5 @@ pp_propfun({atom,_,Atom}) ->
 pp_propfun({remote,_,Mod,Fun}) ->
   pp_propfun(Mod) ++ "," ++ pp_propfun(Fun);
 pp_propfun({var,_,Var}) ->
-  "var(" ++ atom_to_list(Var) ++ ")";
+  "var('" ++ atom_to_list(Var) ++ "')";
 pp_propfun(_) -> "_".
