@@ -130,7 +130,7 @@ pp_propfun({op,_,Op,Arg}) ->
 pp_propfun({op,_,Op,Arg1,Arg2}) ->
   pp_propfun({call,0,{remote,0,{atom,0,erlang},{atom,0,Op}},[Arg1,Arg2]});
 pp_propfun({atom,_,Atom}) ->
-  "lit(atom," ++ atom_to_list(Atom) ++ ")";
+  "lit(atom,'" ++ atom_to_list(Atom) ++ "')";
 pp_propfun({remote,_,Mod,Fun}) ->
   pp_propfun(Mod) ++ "," ++ pp_propfun(Fun);
 pp_propfun({var,_,Var}) ->
