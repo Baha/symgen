@@ -42,7 +42,7 @@ generate_clauses(Fun) ->
   ZipVT = zip_vars_types(Vars, [Types]),
   HeadStr  = pp_head(GenName, ZipVT),
   TypesStr = pp_vars_types(ZipVT),
-  PropStr = "eval(" ++ pp_propfun(PropFun) ++ ")",
+  PropStr = "eval(" ++ pp_propfun(PropFun) ++ ",Env,Exp)",
   PpStr = HeadStr ++ TypesStr ++ "," ++ PropStr ++ ".",
   % PpStr = HeadStr ++ TypesStr ++ ".",
   io:format("~s~n~n", [PpStr]).%,
